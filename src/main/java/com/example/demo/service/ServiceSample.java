@@ -19,6 +19,7 @@ public class ServiceSample {
 
     private final RepositorySample repository;
 
+    // 회원 생성
     @Transactional
     public CreateResponse create(CreateRequest request) {
         EntitySample entity = new EntitySample();
@@ -26,14 +27,17 @@ public class ServiceSample {
         return new CreateResponse(repository.save(entity).getId());
     }
 
+    // id로 회원 검색
     public GetResponse getSample(Long id) {
         return new GetResponse(repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND)).getName());
     }
 
+    // 회원 목록
     public List<GetResponse> getPage(Pageable pageRequest) {
         return repository.getList(pageRequest);
     }
 
+    // 이름 수정
     @Transactional
     public UpdateResponse update(Long id, UpdateRequest request) {
         EntitySample entity = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
