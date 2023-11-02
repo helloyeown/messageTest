@@ -14,12 +14,18 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "MESSAGES")
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Message {
 
     @Id
@@ -42,4 +48,7 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "receiver_id")    // 외래키 mapping
     private EntitySample receiver;
+
+    @Column
+    private boolean delFlag;
 }

@@ -22,6 +22,8 @@ public class QMessage extends EntityPathBase<Message> {
 
     public static final QMessage message = new QMessage("message");
 
+    public final BooleanPath delFlag = createBoolean("delFlag");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isRead = createBoolean("isRead");

@@ -1,13 +1,15 @@
 package com.example.demo.model.dto.messages;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class GetMessages {
     

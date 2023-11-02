@@ -23,7 +23,7 @@ public class UsersServiceTests {
     @Test
     public void insertUserTest(){
 
-        CreateRequest user = new CreateRequest("Jo");
+        CreateRequest user = new CreateRequest("Goo");
 
         service.create(user);
 
