@@ -1,11 +1,13 @@
 package com.example.demo.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UpdateRequest {
 
-    String name;
+    private String name;
 }

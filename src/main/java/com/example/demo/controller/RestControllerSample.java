@@ -32,8 +32,8 @@ public class RestControllerSample {
     }
 
     // id를 통해 회원 가져오기
-    @GetMapping
-    public GetResponse getById(Long id) {
+    @GetMapping("/{id}")
+    public GetResponse getById(@PathVariable Long id) {
         return service.getSample(id);
     }
 
@@ -46,6 +46,12 @@ public class RestControllerSample {
     // 회원 이름 수정
     @PutMapping("/{id}")
     public UpdateResponse update(@PathVariable String id, @RequestBody UpdateRequest request) {
+
+        log.info("Controller.................................");
+        log.info(request);
+        log.info(id);
+
+        // id가 숫자가 아니라면 예외 처리 -> 세밀한 예외 처리를 위해 id를 String 타입으로 받음
         if(!StringUtils.isNumeric(id)) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         return service.update(Long.valueOf(id), request);
     }

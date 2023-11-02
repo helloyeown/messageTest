@@ -35,7 +35,7 @@ public class UsersServiceTests {
     @Test
     public void getSample(){
 
-        log.info(service.getSample(1L));
+        log.info(service.getSample(3L));
 
     }
 
@@ -49,6 +49,7 @@ public class UsersServiceTests {
 
     }
 
+    // 회원 이름 수정
     @Test
     public void updateUserName(){
 
