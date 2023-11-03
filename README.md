@@ -2,9 +2,9 @@
 
    - 스택🔧
       - 서버 : Spring Boot 2.7 (Gradle project)
+      - Data Access : JPA (Hibernate)
       - DB : H2 (auto-ddl : create-drop)\
         https://www.h2database.com/html/main.html
-      - Data Access : JPA (Hibernate)
    - 도메인
       - 사용자
          - 등록 시 고유 이름을 입력 받는다.
