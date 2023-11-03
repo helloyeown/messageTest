@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.example.demo.model.dto.messages.CreateMessage;
@@ -33,7 +32,6 @@ public class MessagesServiceImpl implements MessagesService {
 
     // 쪽지 생성
     @Override
-    @Transactional
     public CreateResponse create(CreateMessage request){
         Message message = new Message();
 
@@ -52,11 +50,14 @@ public class MessagesServiceImpl implements MessagesService {
 
     // 쪽지 읽기
     @Override
-    @Transactional
     public GetMessages readMessage(Long id){
-
         Optional<Message> result = repository.findById(id);
         Message message = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+        // 삭제된 메시지일 경우 예외 처리
+        if (message.isDelFlag()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 메시지입니다.");
+        }
 
         // entity -> dto 형변환 (필드가 여러 개여서 modelMapper 사용)
         ModelMapper modelMapper = new ModelMapper();
@@ -75,23 +76,23 @@ public class MessagesServiceImpl implements MessagesService {
         GetMessages dto = modelMapper.map(message, GetMessages.class);
 
         return dto;
-
     }
 
     // 쪽지 목록
     @Override
     public List<GetMessages> getMessagesList(Pageable pageRequest) {
-
         return repository.getList(pageRequest);
-
     }
 
     // 쪽지 삭제
     @Override
     public void removeMessage(Long id) {
-
         Optional<Message> result = repository.findById(id);
         Message message = result.orElseThrow();
+
+        if(message.isDelFlag()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "이미 삭제된 메시지입니다.");
+        }
 
         log.info(message);
 
@@ -99,30 +100,34 @@ public class MessagesServiceImpl implements MessagesService {
         repository.save(message);
 
         log.info(message);
-
     }
 
     // 쪽지 내용 수정
     @Override
     public UpdateResponse modifyMessage(Long id, UpdateRequest request) {
-
         Optional<Message> result = repository.findById(id);
         Message message = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+        if (message.isDelFlag()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 메시지입니다.");
+        }
 
         message.setText(request.getText());
         repository.save(message);
 
         return new UpdateResponse(message);
-
     }
 
     // 읽음 체크
     @Override
     public void isRead(Long id) {
-
         Message message = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
-        message.setRead(true);
 
+        if (message.isDelFlag()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 메시지입니다.");
+        }
+
+        message.setRead(true);
     }
 
 }

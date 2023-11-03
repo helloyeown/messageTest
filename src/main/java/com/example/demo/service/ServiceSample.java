@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.customException.MemberNameDuplicateException;
 import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.EntitySample;
 import com.example.demo.repository.RepositorySample;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,14 @@ public class ServiceSample {
     // 회원 생성
     @Transactional
     public CreateResponse create(CreateRequest request) {
+        // 같은 이름의 사용자가 존재할 경우 예외 처리
+        Optional<EntitySample> exist = repository.findByName(request.getName());
+
+        if (exist.isPresent()) {
+            throw new MemberNameDuplicateException("이미 같은 이름의 사용자가 존재합니다.");
+        }
+        // / 예외처리
+
         EntitySample entity = new EntitySample();
         entity.setName(request.getName());
         return new CreateResponse(repository.save(entity).getId());
@@ -41,6 +51,13 @@ public class ServiceSample {
     @Transactional
     public UpdateResponse update(Long id, UpdateRequest request) {
         EntitySample entity = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+        // 중복 이름 예외 처리
+        Optional<EntitySample> exist = repository.findByName(request.getName());
+        if (exist.isPresent()) {
+            throw new MemberNameDuplicateException("이미 같은 이름의 사용자가 존재합니다.");
+        }
+
         entity.setName(request.getName());
         return new UpdateResponse(entity);
     }
