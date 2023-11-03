@@ -12,6 +12,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.example.demo.model.dto.messages.CreateMessage;
 import com.example.demo.model.dto.messages.CreateResponse;
 import com.example.demo.model.dto.messages.GetMessages;
+import com.example.demo.model.dto.messages.UpdateRequest;
+import com.example.demo.model.dto.messages.UpdateResponse;
 import com.example.demo.model.entity.EntitySample;
 import com.example.demo.model.entity.Message;
 import com.example.demo.repository.RepositorySample;
@@ -19,9 +21,11 @@ import com.example.demo.repository.messages.MessagesRepository;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class MessagesServiceImpl implements MessagesService {
     
     private final MessagesRepository repository;
@@ -34,10 +38,10 @@ public class MessagesServiceImpl implements MessagesService {
         Message message = new Message();
 
         Optional<EntitySample> result = sample.findByName(request.getSender());
-        EntitySample sender = result.orElseThrow();
+        EntitySample sender = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         Optional<EntitySample> result2 = sample.findByName(request.getReceiver());
-        EntitySample receiver = result2.orElseThrow(); 
+        EntitySample receiver = result2.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND)); 
 
         message.setText(request.getText());
         message.setSender(sender);
@@ -52,7 +56,7 @@ public class MessagesServiceImpl implements MessagesService {
     public GetMessages readMessage(Long id){
 
         Optional<Message> result = repository.findById(id);
-        Message message = result.orElseThrow();
+        Message message = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         // entity -> dto 형변환 (필드가 여러 개여서 modelMapper 사용)
         ModelMapper modelMapper = new ModelMapper();
@@ -89,8 +93,35 @@ public class MessagesServiceImpl implements MessagesService {
         Optional<Message> result = repository.findById(id);
         Message message = result.orElseThrow();
 
+        log.info(message);
+
         message.setDelFlag(true);
         repository.save(message);
+
+        log.info(message);
+
+    }
+
+    // 쪽지 내용 수정
+    @Override
+    public UpdateResponse modifyMessage(Long id, UpdateRequest request) {
+
+        Optional<Message> result = repository.findById(id);
+        Message message = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+        message.setText(request.getText());
+        repository.save(message);
+
+        return new UpdateResponse(message);
+
+    }
+
+    // 읽음 체크
+    @Override
+    public void isRead(Long id) {
+
+        Message message = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+        message.setRead(true);
 
     }
 

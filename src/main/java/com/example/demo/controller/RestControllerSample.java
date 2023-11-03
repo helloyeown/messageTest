@@ -25,7 +25,6 @@ public class RestControllerSample {
     // 회원 생성
     @PostMapping("/")
     public CreateResponse create(@RequestBody CreateRequest request) {
-
         log.info("create....................");
 
         return service.create(request);
@@ -54,5 +53,13 @@ public class RestControllerSample {
         // id가 숫자가 아니라면 예외 처리 -> 세밀한 예외 처리를 위해 id를 String 타입으로 받음
         if(!StringUtils.isNumeric(id)) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         return service.update(Long.valueOf(id), request);
+    }
+
+    // 회원 삭제
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id) {
+        if(!StringUtils.isNumeric(id)) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+        
+        service.deleteUser(Long.valueOf(id));
     }
 }

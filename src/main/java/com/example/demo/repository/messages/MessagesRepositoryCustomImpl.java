@@ -1,13 +1,11 @@
 package com.example.demo.repository.messages;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.dto.messages.GetMessages;
-import com.example.demo.model.entity.EntitySample;
 import com.example.demo.model.entity.QMessage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

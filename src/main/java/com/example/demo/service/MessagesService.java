@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.dto.messages.CreateMessage;
 import com.example.demo.model.dto.messages.CreateResponse;
 import com.example.demo.model.dto.messages.GetMessages;
+import com.example.demo.model.dto.messages.UpdateRequest;
+import com.example.demo.model.dto.messages.UpdateResponse;
 
-@Transactional(readOnly = true)
+@Transactional
 public interface MessagesService {
     
     CreateResponse create(CreateMessage request);
@@ -19,5 +21,9 @@ public interface MessagesService {
     List<GetMessages> getMessagesList(Pageable pageRequest);
 
     void removeMessage(Long id);
+
+    UpdateResponse modifyMessage(Long id, UpdateRequest request);
+
+    void isRead(Long id);
 
 }

@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.example.demo.model.dto.messages.CreateMessage;
+import com.example.demo.model.dto.messages.UpdateRequest;
 import com.example.demo.service.MessagesService;
-import com.example.demo.service.MessagesServiceImpl;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -60,4 +60,23 @@ public class MessagesServiceTests {
 
     }
 
+    // 쪽지 내용 수정
+    @Test
+    public void modifyTest(){
+
+        UpdateRequest request = new UpdateRequest("modify Service Test");
+
+        service.modifyMessage(3L, request);
+
+        log.info("success");
+
+    }
+
+    // 읽음 체크
+    @Test
+    public void isReadTest(){
+
+        service.isRead(3L);
+
+    }
 }

@@ -44,4 +44,10 @@ public class ServiceSample {
         entity.setName(request.getName());
         return new UpdateResponse(entity);
     }
+
+    // 회원 삭제 (물리적 삭제)
+    @Transactional
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
+    }
 }

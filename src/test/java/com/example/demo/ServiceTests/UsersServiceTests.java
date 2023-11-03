@@ -22,13 +22,11 @@ public class UsersServiceTests {
     // 회원 가입
     @Test
     public void insertUserTest(){
-
-        CreateRequest user = new CreateRequest("Goo");
+        CreateRequest user = new CreateRequest("Yeye");
 
         service.create(user);
 
         log.info("success");
-
     }
 
     // id로 회원 이름 불러오기
@@ -59,6 +57,12 @@ public class UsersServiceTests {
 
         log.info("success");
 
+    }
+
+    // 삭제
+    @Test
+    public void deleteUserTest(){
+        service.deleteUser(34L);
     }
 
 }
