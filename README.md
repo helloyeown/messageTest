@@ -28,10 +28,11 @@
       - 중복 이름 예외 처리
       - Message Read 할 때, delFlag true인 항목 제외
       - Message modify 할 때, 삭제 됐으면 수정 못 하게
-- 작업 진행 예정
       - ModelMapper -> MapStruct 변환 작업 (readMessage)
       - 조회 시 읽음 처리 & 읽은 시간
+- 작업 진행 예정
       - Message 로깅 처리
+      - 본인 쪽지만 읽을 수 있게 처리
 - 로컬 테스트
    - postman
 - 시도해 보고 싶은 부분 or 추가해야 하는 작업

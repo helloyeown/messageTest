@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -51,4 +52,7 @@ public class Message {
 
     @Column
     private boolean delFlag;
+
+    @Column
+    private LocalDateTime readAt;
 }

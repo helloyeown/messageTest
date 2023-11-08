@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.example.demo.mapper.MessageMapper;
 import com.example.demo.model.dto.messages.CreateMessage;
 import com.example.demo.model.dto.messages.CreateResponse;
 import com.example.demo.model.dto.messages.GetMessages;
@@ -17,6 +18,8 @@ import com.example.demo.model.entity.EntitySample;
 import com.example.demo.model.entity.Message;
 import com.example.demo.repository.RepositorySample;
 import com.example.demo.repository.messages.MessagesRepository;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
@@ -48,32 +51,56 @@ public class MessagesServiceImpl implements MessagesService {
         return new CreateResponse(repository.save(message).getId());
     }
 
-    // 쪽지 읽기
+    // // 쪽지 읽기
+    // @Override
+    // public GetMessages readMessage(Long id){
+    //     Optional<Message> result = repository.findById(id);
+    //     Message message = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+    //     // 삭제된 메시지일 경우 예외 처리
+    //     if (message.isDelFlag()) {
+    //         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 메시지입니다.");
+    //     }
+
+    //     // entity -> dto 형변환 (필드가 여러 개여서 modelMapper 사용)
+    //     ModelMapper modelMapper = new ModelMapper();
+
+    //     // EntitySample를 String으로 변환하는 Converter 정의
+    //     Converter<EntitySample, String> toName = new AbstractConverter<EntitySample,String>() {
+    //         protected String convert(EntitySample source){
+    //             return source.getName();
+    //         }
+    //     };
+
+    //     // Converter를 ModelMapper에 등록
+    //     modelMapper.addConverter(toName);
+
+    //     // Message Entity를 GetMessages DTO로 변환
+    //     GetMessages dto = modelMapper.map(message, GetMessages.class);
+    //     log.info(dto);
+        
+    //     return dto;
+    // }
+
+
+    // 쪽지 읽기 (ModelMapper -> MapStruct를 이용한 방식으로 형변환)
     @Override
-    public GetMessages readMessage(Long id){
-        Optional<Message> result = repository.findById(id);
-        Message message = result.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+    public GetMessages readMessage(Long id) {
+        Message message = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         // 삭제된 메시지일 경우 예외 처리
-        if (message.isDelFlag()) {
+        if(message.isDelFlag()) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 메시지입니다.");
         }
 
-        // entity -> dto 형변환 (필드가 여러 개여서 modelMapper 사용)
-        ModelMapper modelMapper = new ModelMapper();
+        message.setRead(true);
 
-        // EntitySample를 String으로 변환하는 Converter 정의
-        Converter<EntitySample, String> toName = new AbstractConverter<EntitySample,String>() {
-            protected String convert(EntitySample source){
-                return source.getName();
-            }
-        };
+        if (message.getReadAt() == null) {
+            message.setReadAt(LocalDateTime.now());
+        }
 
-        // Converter를 ModelMapper에 등록
-        modelMapper.addConverter(toName);
-
-        // Message Entity를 GetMessages DTO로 변환
-        GetMessages dto = modelMapper.map(message, GetMessages.class);
+        // entity -> DTO 변환 (MapStruct)
+        GetMessages dto = MessageMapper.INSTANCE.toDTO(message);
 
         return dto;
     }

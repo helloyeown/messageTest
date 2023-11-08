@@ -1,5 +1,8 @@
 package com.example.demo.ServiceTests;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +41,23 @@ public class MessagesServiceTests {
     @Test
     public void readTest(){
 
-        log.info(service.readMessage(50L));
+        log.info(service.readMessage(97L));
+
+    }
+
+    // 쪽지 읽기 (실행시간)
+    @Test
+    public void readWithMapStructTest(){
+
+        Instant start = Instant.now();
+
+        service.readMessage(3L);
+
+        Instant end = Instant.now();
+
+        long elapsed = Duration.between(start, end).toMillis(); 
+
+        log.info("Elapsed time: " + elapsed + " ms");
 
     }
 

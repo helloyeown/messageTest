@@ -28,6 +28,8 @@ public class QMessage extends EntityPathBase<Message> {
 
     public final BooleanPath isRead = createBoolean("isRead");
 
+    public final DateTimePath<java.time.LocalDateTime> readAt = createDateTime("readAt", java.time.LocalDateTime.class);
+
     public final QEntitySample receiver;
 
     public final DateTimePath<java.time.LocalDateTime> sendedDt = createDateTime("sendedDt", java.time.LocalDateTime.class);
