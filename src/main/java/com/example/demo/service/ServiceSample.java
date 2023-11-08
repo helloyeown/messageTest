@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.customException.MemberNameDuplicateException;
+import com.example.demo.customException.DuplicateMemberException;
 import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.EntitySample;
 import com.example.demo.repository.RepositorySample;
@@ -13,6 +13,8 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +30,9 @@ public class ServiceSample {
         Optional<EntitySample> exist = repository.findByName(request.getName());
 
         if (exist.isPresent()) {
-            throw new MemberNameDuplicateException("이미 같은 이름의 사용자가 존재합니다.");
+            throw new DuplicateMemberException(request.getName());  // request.getName은 로그에 남음
+            // 사용자에게 보여지는 오류 메시지는 UserErrorCode에서 정의된 부분
         }
-        // / 예외처리
 
         EntitySample entity = new EntitySample();
         entity.setName(request.getName());
@@ -39,7 +41,7 @@ public class ServiceSample {
 
     // id로 회원 검색
     public GetResponse getSample(Long id) {
-        return new GetResponse(repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND)).getName());
+        return new GetResponse(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다.")).getName());
     }
 
     // 회원 목록
@@ -55,7 +57,7 @@ public class ServiceSample {
         // 중복 이름 예외 처리
         Optional<EntitySample> exist = repository.findByName(request.getName());
         if (exist.isPresent()) {
-            throw new MemberNameDuplicateException("이미 같은 이름의 사용자가 존재합니다.");
+            throw new DuplicateMemberException("이미 같은 이름의 사용자가 존재합니다.");
         }
 
         entity.setName(request.getName());
