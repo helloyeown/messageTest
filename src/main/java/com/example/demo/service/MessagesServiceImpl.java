@@ -1,8 +1,5 @@
 package com.example.demo.service;
 
-import org.modelmapper.AbstractConverter;
-import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -87,7 +84,7 @@ public class MessagesServiceImpl implements MessagesService {
     @Override
     public GetMessages readMessage(Long id) {
         Message message = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
-
+        
         // 삭제된 메시지일 경우 예외 처리
         if(message.isDelFlag()) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 메시지입니다.");
