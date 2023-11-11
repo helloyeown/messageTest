@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Getter
@@ -24,4 +25,14 @@ public class EntitySample {
 
     @CreatedDate
     private LocalDateTime createdDt;
+
+    @Column
+    private String roles;
+
+    public List<String> getRoleNames() {
+        if (this.roles.length() > 0) {
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
 }

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -61,5 +62,11 @@ public class RestControllerSample {
         if(!StringUtils.isNumeric(id)) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         
         service.deleteUser(Long.valueOf(id));
+    }
+
+    // 회원 정보 인증
+    @GetMapping("/manage/check")
+    public ResponseEntity check() {
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-09T15:32:42+0900",
-    comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.0.2.jar, environment: Java 19.0.2 (Oracle Corporation)"
+    date = "2023-11-11T16:34:48+0900",
+    comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.4.jar, environment: Java 19.0.2 (Oracle Corporation)"
 )
 @Component
 public class MessageMapperImpl implements MessageMapper {

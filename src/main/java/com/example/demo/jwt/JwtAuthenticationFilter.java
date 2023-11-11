@@ -18,15 +18,20 @@ import com.example.demo.model.dto.LoginRequest;
 import com.example.demo.service.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
+// 인증 기능
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    
+
     private final AuthenticationManager manager;
     private final JwtTokenProvider provider;
+
+    public JwtAuthenticationFilter(AuthenticationManager manager, JwtTokenProvider provider) {
+        this.manager = manager;
+        this.provider = provider;
+        super.setAuthenticationManager(manager);
+    }
 
     // AuthenticationManager를 통해 Authentication을 리턴해야 함
     @Override
