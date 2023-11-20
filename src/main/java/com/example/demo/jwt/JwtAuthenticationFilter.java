@@ -25,12 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager manager;
-    private final JwtTokenProvider provider;
+    private JwtTokenProvider provider;
 
     public JwtAuthenticationFilter(AuthenticationManager manager, JwtTokenProvider provider) {
         this.manager = manager;
         this.provider = provider;
         super.setAuthenticationManager(manager);
+    }
+
+    public JwtAuthenticationFilter(AuthenticationManager manager) {
+        this.manager = manager;
+        this.provider = null;
     }
 
     // AuthenticationManager를 통해 Authentication을 리턴해야 함

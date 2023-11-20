@@ -3,11 +3,14 @@ package com.example.demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.SecurityConfigurer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -43,7 +46,8 @@ public class SecurityConfig {
 		return source;
     }
 
-    @Bean
+    // Spring Security는 AuthenticationManager를 한 번만 생성하도록 설계되어 있음
+    // 빈을 중복 생성하지 않기 위해 @Bean을 사용하지 않음
     public AuthenticationManager authenticationManager() throws Exception {
         return auth.build();
     }
@@ -60,21 +64,20 @@ public class SecurityConfig {
             .httpBasic(httpBasic -> httpBasic.disable())
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), provider))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), repository))
-            .authorizeRequests(authorize -> authorize
+            .authorizeRequests(authorize -> authorize       // 인가 권한이 필요한 컨트롤러 주소
                                 .antMatchers("/api/users/manage/check").hasRole("USER")
                                 .antMatchers("/api/users/manage/information").hasRole("USER")
                                 .anyRequest().authenticated())
             .build();
     }
 
-    // 사용자 정의 필터를 등록
-    // JwtAuthenticationFilter와 JwtAuthorizationFilter를 추가하므로써 JWT를 이용한 인증 및 인가를 처리
+    // // 사용자 정의 필터를 등록
+    // // JwtAuthenticationFilter와 JwtAuthorizationFilter를 추가하므로써 JWT를 이용한 인증 및 인가를 처리
     // public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
     //     public void configure(HttpSecurity http) throws Exception {
     //         AuthenticationManager manager = http.getSharedObject(AuthenticationManager.class);
     //         http.addFilter(new JwtAuthenticationFilter(manager))
-    //             .addFilter(new Jwtauthor)
+    //             .addFilter(new JwtAuthorizationFilter(manager, repository));
     //     }
     // }
-
 }

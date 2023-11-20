@@ -25,6 +25,8 @@ public class QEntitySample extends EntityPathBase<EntitySample> {
 
     public final StringPath name = createString("name");
 
+    public final StringPath roles = createString("roles");
+
     public QEntitySample(String variable) {
         super(EntitySample.class, forVariable(variable));
     }
